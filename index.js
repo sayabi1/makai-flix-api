@@ -1,60 +1,257 @@
 const express = require("express");
+const { json } = require("express/lib/response");
+(bodyParser = require("body-parser")), (uuid = require("uuid"));
 
 (morgan = require("morgan")),
   (fs = require("fs")), // import built in node modules fs and path
   (path = require("path"));
 const app = express();
 app.use(express.static("public"));
+app.use(bodyParser.json());
 
-let topMovies = [
+let users = [
   {
-    title: "Avatar",
-    director: "steven Spielsberg",
+    id: 1,
+    Name: "Harry",
+    favoriteMovies: [],
   },
   {
-    title: "True Grit",
-    Director: "Joel and Ethan Coen",
+    id: 2,
+    Name: "larry",
+    favoriteMovies: ["Deathrace"],
   },
   {
-    title: "Pulp Fiction",
-    Director: "Quentin Tarantino",
+    id: 3,
+    Name: "carry",
+    favoriteMovies: ["forestgump"],
+  },
+];
+
+let movies = [
+  {
+    Title: "Avatar",
+    Director: {
+      Name: "Steven Spielsberg",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Science-fiction",
+      description:
+        "The film is set in the mid-22nd century when humans are colonizing Pandora, a lush habitable moon of a gas giant in the Alpha Centauri star system, in order to mine the valuable mineral unobtanium",
+    },
   },
   {
-    title: "The Guard",
-    Director: "John Michael McDonagh",
+    Title: "True Grit",
+    //Director: "Joel and Ethan Coen",
+    Director: {
+      Name: "Joel and Ethan Coen",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Thriller",
+      Description:
+        " It is the second film adaptation of Charles Portis  novel of the same name from 1968. In the first film, which was released in 1969 and has the German title Der Marshal , John Wayne played the role of Rooster Cogburn.",
+    },
   },
   {
-    title: "E.T. The Extra-Terrestrial",
-    Director: "Steven Spielberg",
+    Title: "Pulp Fiction",
+    //Director: "Quentin Tarantino",
+    Director: {
+      Name: "Quentin Tarantino",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime",
+      Description:
+        "The title refers to the pulp magazines and hardboiled crime novels popular during the mid-20th century, known for their graphic violence and punchy dialogue.",
+    },
   },
   {
-    title: "Gravity",
-    Director: "Alfonso Cuarón",
+    Title: "The Guard",
+    //Director: "John Michael McDonagh",
+    Director: {
+      Name: "John Michael McDonagh",
+      Bio: "this is a Director",
+    },
+    " Genre": {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
   },
   {
-    title: "Shaun of the Dead",
-    Director: "Edgar Wright",
+    Title: "E.T. The Extra-Terrestrial",
+    //Director: "Steven Spielberg",
+    Director: {
+      Name: "Steven Spielberg",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
   },
   {
-    title: "Snowpiercer",
-    Director: "oon-ho Bong",
+    Title: "Gravity",
+    //Director: "Alfonso Cuarón",
+    Director: {
+      Name: "Alfonso Cuarón",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
+  },
+
+  {
+    Title: "Snowpiercer",
+    //Director: "oon-ho Bong",
+    Director: {
+      Name: "oon-ho Bong",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
   },
   {
-    title: "Lock Stock and Two Smoking Barrels",
-    Director: "Guy Ritchie",
+    Title: "Lock Stock and Two Smoking Barrels",
+    //Director: "Guy Ritchie",
+    Director: {
+      Name: "Guy Ritchie",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
   },
   {
-    title: "Birdman",
-    Director: "Alejandro González Iñárritu",
+    Title: "Birdman",
+    //Director: "Alejandro González Iñárritu",
+    Director: {
+      Name: "Alejandro González Iñárritu",
+      Bio: "this is a Director",
+    },
+    Genre: {
+      Name: "Crime comedy",
+      Description:
+        "The film received critical acclaim and was a box office success. Both Gleeson and Cheadle received acclaim for their performances, with Gleeson receiving a Golden Globe Award nomination",
+    },
   },
 ];
 
 // GET request
 app.get("/movies", (req, res) => {
-  res.json(topMovies);
+  res.json(movies);
 });
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+//gets the data about single movie by title
+app.get("/movies/:title", (req, res) => {
+  const { title } = req.params;
+  const movie = movies.find((movie) => movie.Title === title);
+
+  if (movie) {
+    res.status(200).json(movie);
+  } else res.status(400).send("no such movie was found");
+});
+
+//gets the data about single movie by genre
+app.get("/movies/genre/:genreName", (req, res) => {
+  const { genreName } = req.params;
+  const genre = movies.find((movie) => movie.Genre.Name === genreName).Genre;
+
+  if (genre) {
+    res.status(200).json(genre);
+  } else res.status(400).send("no such genre was found");
+});
+//gets the data about single movie by Director
+app.get("/movies/directors/:directorName", (req, res) => {
+  const { directorName } = req.params;
+  const director = movies.find(
+    (movie) => movie.Director.Name === directorName
+  ).Director;
+
+  if (director) {
+    res.status(200).json(director);
+  } else res.status(400).send("no such director was found");
+});
+
 app.get("/", (req, res) => {
-  res.send("Welcome to my Movies club!");
+  res.send("Welcome to my Movies club!...");
+});
+
+// Create: New user
+app.post("/users", (req, res) => {
+  const newUser = req.body;
+
+  if (newUser.name) {
+    newUser.id = uuid.v4();
+    users.push(newUser);
+    res.status(201).json(newUser);
+  } else {
+    res.status(400).send("New user must have a name.");
+  }
+});
+// Update: User info
+app.put("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const updatedUser = req.body;
+
+  let user = users.find((user) => user.id == id);
+  if (user) {
+    user.name = updatedUser.name;
+    res.status(200).json(user);
+  } else {
+    res.status(400).send("no such user");
+  }
+});
+// Create: Add movie to a user's list of favorite movies
+app.post("/users/:id/:newMovie", (req, res) => {
+  const { id, newMovie } = req.params;
+
+  let user = users.find((user) => user.id == id);
+  if (user) {
+    user.favoriteMovies.push(newMovie);
+    res.status(200).send(`${newMovie} has been added to your favorite's list.`);
+  } else {
+    res.status(400).send("no such user");
+  }
+});
+//Delete
+app.delete("/users/:id/:movieTitle", (req, res) => {
+  const { id, movieTitle } = req.params;
+  let user = users.find((user) => user.id == id);
+  if (user) {
+    user.favoriteMovies = user.favoriteMovies.filter(
+      (title) => title !== movieTitle
+    );
+    res
+      .status(200)
+      .send(`${movieTitle} has been removed from user ${id}'s array`);
+  } else {
+    res.status(400).send("no such user");
+  }
+});
+//Delete
+app.delete("/users/:id/", (req, res) => {
+  const { id } = req.params;
+  user = users.find((user) => user.id == id);
+  if (user) {
+    let user = users.filter((user) => user.id != id);
+    res.status(200).send(`user ${id} has been removed`);
+  } else {
+    res.status(400).send("no such user");
+  }
 });
 // Morgan middelware liabraries to log all the request
 const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
