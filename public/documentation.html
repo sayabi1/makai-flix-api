@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css">
     <title>Document</title>
   </head>
   <body>
@@ -11,6 +12,127 @@
     <p>
       Lorem ipsum dolor, sit amet consectetur adipisicing elit. Labore tempore
       quod qui sint quasi officia inventore iusto fugiat laborum veniam?
+
+      
+      <table>
+        <tr>
+          <th>Business Logic</th>
+          <th>URL</th>
+          <th>HTTP method</th>
+          <th>Request Body data format</th>
+          <th>Response Body data format</th>
+        </tr>
+        <tr>
+         <td>Get a list of movies</td>
+         <td>/movies</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about all the movies</td>
+        </tr>
+        <tr>
+         <td>Get data about a
+          single student by
+          title</td>
+         <td>movies/:title</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about a single movie,
+          containing an ID, name, and
+          genre property. Example:<strong>
+            {
+              Title: "True Grit",
+              Director: {
+                Name: "Joel and Ethan Coen",
+                Bio: "this is a Director",
+              },
+              Genre: {
+                Name: "Thriller",
+                Description:
+                  " It is the second film adaptation of Charles Portis  novel of the same name from 1968. In the first film, which was released in 1969 and has the German title Der Marshal , John Wayne played the role of Rooster Cogburn.",
+              },
+          </strong>
+          },</td>
+        </tr>
+        <tr>
+         <td>gets the data about single movie by Director</td>
+         <td>/movies/directors/:directorName</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about a single movie,
+          containing a director name and bio. Example:<strong>
+            {
+              "Name": "Steven Spielberg",
+              "Bio": "this is a Director"
+                    }
+          </strong></td>
+        </tr>
+        <tr>
+         <td>create the new user</td>
+         <td>/users</td>
+         <td>POST</td>
+         <td>A JSON object holding
+          data about the movie to
+          add, structured like:<strong>
+            {
+              "Name":"curry",
+              "favouriteMovies":["top gun"]
+                    }
+          </strong>
+        }</td>
+         <td>A JSON object holding data
+          about the movie that was
+          added, including an ID:<strong>
+            {
+              "Name":"curry",
+              "favouriteMovies":["top gun"]
+          </strong>
+        }</td>
+        </tr>
+        <tr>
+         <td>Add movie to a user's list of favorite movies</td>
+         <td>users/:id/:newMovie</td>
+         <td>POST</td>
+         <td>None</td>
+         <td>A text message indicating the Favorite movie has been added to your list</td>
+        </tr>
+        <tr>
+         <td> Update: User info</td>
+         <td>users/:id</td>
+         <td>PUT</td>
+         <td>A JSON object holding updated
+          data about the user  like:<strong>
+            {
+              "Name":"Harry update name",
+              "favouriteMovies":[]
+                    }
+          </strong></td>
+         <td>A JSON object holding updated data about user like:
+          <strong>
+            {
+              "id": 1,
+              "Name": "Harry",
+              "favoriteMovies": []
+                     }
+          </strong> </td>
+        </tr>
+        <tr>
+          <td>delete the favorite movies with movie title from user</td>
+          <td>users/:id/:newMovie</td>
+          <td>Delete</td>
+          <td>None</td>
+          <td>A text message indicating movieTitle has been removed from user id array</td>
+         </tr>
+        <tr>
+          <td>delete the user with the given id</td>
+          <td>/users/:id/</td>
+          <td>Delete</td>
+          <td>None</td>
+          <td>A text message indicating the user with given id has been removed</td>
+         </tr>
+      </table>
     </p>
   </body>
 </html>
