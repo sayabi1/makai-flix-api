@@ -1,13 +1,13 @@
 const express = require("express");
-const { json } = require("express/lib/response");
-(bodyParser = require("body-parser")), (uuid = require("uuid"));
-
-(morgan = require("morgan")),
-  (fs = require("fs")), // import built in node modules fs and path
-  (path = require("path"));
+const bodyParser = require("body-parser");
+const uuid = require("uuid");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 const app = express();
-app.use(express.static("public"));
+
 app.use(bodyParser.json());
+app.use(express.static("public"));
 
 let users = [
   {
@@ -42,7 +42,6 @@ let movies = [
   },
   {
     Title: "True Grit",
-    //Director: "Joel and Ethan Coen",
     Director: {
       Name: "Joel and Ethan Coen",
       Bio: "this is a Director",
@@ -147,6 +146,14 @@ let movies = [
   },
 ];
 
+const { CREATED, OK, BAD_REQUEST, NOT_FOUND } = {
+  CREATED: 201,
+  OK: 200,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500,
+};
+
 // GET request
 app.get("/movies", (req, res) => {
   res.json(movies);
@@ -161,8 +168,8 @@ app.get("/movies/:title", (req, res) => {
   const movie = movies.find((movie) => movie.Title === title);
 
   if (movie) {
-    res.status(200).json(movie);
-  } else res.status(400).send("no such movie was found");
+    res.status(OK).json(movie);
+  } else res.status(BAD_REQUEST).send("no such movie was found");
 });
 
 //gets the data about single movie by genre
@@ -171,8 +178,8 @@ app.get("/movies/genre/:genreName", (req, res) => {
   const genre = movies.find((movie) => movie.Genre.Name === genreName).Genre;
 
   if (genre) {
-    res.status(200).json(genre);
-  } else res.status(400).send("no such genre was found");
+    res.status(OK).json(genre);
+  } else res.status(BAD_REQUEST).send("no such genre was found");
 });
 //gets the data about single movie by Director
 app.get("/movies/directors/:directorName", (req, res) => {
@@ -182,8 +189,8 @@ app.get("/movies/directors/:directorName", (req, res) => {
   ).Director;
 
   if (director) {
-    res.status(200).json(director);
-  } else res.status(400).send("no such director was found");
+    res.status(OK).json(director);
+  } else res.status(BAD_REQUEST).send("no such director was found");
 });
 
 app.get("/", (req, res) => {
@@ -197,9 +204,9 @@ app.post("/users", (req, res) => {
   if (newUser.name) {
     newUser.id = uuid.v4();
     users.push(newUser);
-    res.status(201).json(newUser);
+    res.status(OK).json(newUser);
   } else {
-    res.status(400).send("New user must have a name.");
+    res.status(BAD_REQUEST).send("New user must have a name.");
   }
 });
 // Update: User info
@@ -210,9 +217,9 @@ app.put("/users/:id", (req, res) => {
   let user = users.find((user) => user.id == id);
   if (user) {
     user.name = updatedUser.name;
-    res.status(200).json(user);
+    res.status(OK).json(user);
   } else {
-    res.status(400).send("no such user");
+    res.status(BAD_REQUEST).send("no such user");
   }
 });
 // Create: Add movie to a user's list of favorite movies
@@ -222,9 +229,9 @@ app.post("/users/:id/:newMovie", (req, res) => {
   let user = users.find((user) => user.id == id);
   if (user) {
     user.favoriteMovies.push(newMovie);
-    res.status(200).send(`${newMovie} has been added to your favorite's list.`);
+    res.status(OK).send(`${newMovie} has been added to your favorite's list.`);
   } else {
-    res.status(400).send("no such user");
+    res.status(BAD_REQUEST).send("no such user");
   }
 });
 //Delete
@@ -236,10 +243,10 @@ app.delete("/users/:id/:movieTitle", (req, res) => {
       (title) => title !== movieTitle
     );
     res
-      .status(200)
+      .status(OK)
       .send(`${movieTitle} has been removed from user ${id}'s array`);
   } else {
-    res.status(400).send("no such user");
+    res.status(NOT_FOUND).send("no such user");
   }
 });
 //Delete
@@ -248,9 +255,9 @@ app.delete("/users/:id/", (req, res) => {
   user = users.find((user) => user.id == id);
   if (user) {
     let user = users.filter((user) => user.id != id);
-    res.status(200).send(`user ${id} has been removed`);
+    res.status(OK).send(`user ${id} has been removed`);
   } else {
-    res.status(400).send("no such user");
+    res.status(BAD_REQUEST).send("no such user");
   }
 });
 // Morgan middelware liabraries to log all the request
@@ -262,7 +269,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 // Error handling in Express
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(SERVER_ERROR).send("Something broke!");
 });
 app.listen(8080, () => {
   console.log("Your app is listening on port 8080.");

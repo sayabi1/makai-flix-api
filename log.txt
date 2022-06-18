@@ -149,3 +149,4 @@ Timestamp: Thu May 26 2022 19:24:08 GMT+0200 (Central European Summer Time)
 ::1 - - [09/Jun/2022:12:19:54 +0000] "POST /users/1/The%20Guard HTTP/1.1" 404 159 "-" "PostmanRuntime/7.29.0"
 ::1 - - [09/Jun/2022:12:58:34 +0000] "DELETE /users HTTP/1.1" 404 147 "-" "PostmanRuntime/7.29.0"
 ::1 - - [09/Jun/2022:13:00:10 +0000] "GET /users/1 HTTP/1.1" 404 146 "-" "PostmanRuntime/7.29.0"
+::1 - - [11/Jun/2022:09:55:07 +0000] "PUT /movies HTTP/1.1" 404 145 "-" "PostmanRuntime/7.29.0"
