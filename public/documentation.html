@@ -31,8 +31,24 @@
           about all the movies</td>
         </tr>
         <tr>
+         <td>Get a list of users</td>
+         <td>/users</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about all the users</td>
+        </tr>
+        <tr>
+         <td>Get a user by Username</td>
+         <td>/users/:Username</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about  the user with the given userName</td>
+        </tr>
+        <tr>
          <td>Get data about a
-          single student by
+          single movie by
           title</td>
          <td>movies/:title</td>
          <td>GET</td>
@@ -56,17 +72,80 @@
           },</td>
         </tr>
         <tr>
-         <td>gets the data about single movie by Director</td>
-         <td>/movies/directors/:directorName</td>
+         <td>gets the data about  movies by Director name</td>
+         <td>/movies/director/:Name</td>
          <td>GET</td>
          <td>None</td>
          <td>A JSON object holding data
-          about a single movie,
+          about  movie,
           containing a director name and bio. Example:<strong>
+            [
+    {
+        "Genre": {
+            "Name": "Science Fiction",
+            "Description": "Science fiction is one of the most creative genres in literature. Sci-fi novels take readers on adventures from faraway galaxies to underwater worlds and everywhere in between, introducing them to otherworldly characters and technologies along the way. Learn more about the history of this fascinating genre "
+        },
+        "Director": {
+            "Name": "James Cameron",
+            "Bio": "James Cameron is a movie world class director, producer, writer. He  was born on  Ontario, Canada",
+            "Birth": "1954-08-16"
+        },
+        "Actors": [],
+        "_id": "62a9dddf0099b8e3170b3b17",
+        "Title": "Avatar",
+        "Description": "Avatar  is a 2009 American epic science fiction film directed, written, produced, and co-edited by James Cameron",
+        "ImagePath": "https://www.imdb.com/title/tt1630029/mediaviewer/rm1900810753/?ref_=tt_ov_i",
+        "Featured": true
+    },
+    {
+        "Genre": {
+            "Name": "Romance",
+            "Description": "Romance film can be defined as a genre wherein the plot revolves around the love between two protagonists"
+        },
+        "Director": {
+            "Name": "James Cameron",
+            "Bio": "James Cameron is a movie world class director, producer, writer. He  was born on  Ontario, Canada",
+            "Birth": "1954-08-16"
+        },
+        "Actors": [],
+        "_id": "62a9dff30099b8e3170b3b19",
+        "Title": "Titanic",
+        "Description": "itanic is a 1997 American epic romantic disaster movie.",
+        "ImagePath": "https://www.imdb.com/title/tt0120338/mediaviewer/rm2647458304/?ref_=tt_ov_i",
+        "Featured": true
+    }
+]
+          </strong></td>
+        </tr>
+        <tr>
+         <td>gets the data about  movie by Genre name</td>
+         <td>/movies/genre/:name</td>
+         <td>GET</td>
+         <td>None</td>
+         <td>A JSON object holding data
+          about e movie,
+          containing a Genre name and Description. Example:<strong>
             {
-              "Name": "Steven Spielberg",
-              "Bio": "this is a Director"
-                    }
+              "Genre": {
+                  "Name": "Thriller",
+                  "Description": "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."
+              },
+              "Director": {
+                  "Name": "Jonathan Demme",
+                  "Bio": "Robert Jonathan Demme was an American director, producer, and screenwriter.",
+                  "Birth": "1944",
+                  "Death": "2017"
+              },
+              "_id": "62a8cc000099b8e3170b3b15",
+              "Title": "Silence of the Lambs",
+              "Description": "update  A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer.",
+              "ImagePath": "https://www.imdb.com/title/tt0102926/mediaviewer/rm3242988544/?ref_=tt_ov_i",
+              "Featured": true,
+              "Actors": [
+                  "Anthony Hopkins"
+              ]
+          }
+      ]
           </strong></td>
         </tr>
         <tr>
@@ -74,63 +153,68 @@
          <td>/users</td>
          <td>POST</td>
          <td>A JSON object holding
-          data about the movie to
+          data about the user to
           add, structured like:<strong>
             {
-              "Name":"curry",
-              "favouriteMovies":["top gun"]
-                    }
+              "Username": "Raju",
+              "Password": "123456",
+              "Email": "raju061@gmail.com",
+              "Birthday":"11/11/1995"
+          }
           </strong>
         }</td>
          <td>A JSON object holding data
           about the movie that was
           added, including an ID:<strong>
             {
-              "Name":"curry",
-              "favouriteMovies":["top gun"]
+              "Username": "Raju",
+              "Password": "123456",
+              "Email": "raju061@gmail.com",
+              "Birthday":"11/11/1995"
+          }
           </strong>
-        }</td>
+        </td>
         </tr>
         <tr>
-         <td>Add movie to a user's list of favorite movies</td>
-         <td>users/:id/:newMovie</td>
+         <td>Add movie to a user's list of favorite movies by userName and MovieID</td>
+         <td>/users/:Username/movies/:MovieID</td>
          <td>POST</td>
          <td>None</td>
-         <td>A text message indicating the Favorite movie has been added to your list</td>
+         <td>returns the user info with updated FavoriteMovies array</td>
         </tr>
         <tr>
          <td> Update: User info</td>
-         <td>users/:id</td>
+         <td>/users/:Username</td>
          <td>PUT</td>
-         <td>A JSON object holding updated
-          data about the user  like:<strong>
-            {
-              "Name":"Harry update name",
-              "favouriteMovies":[]
-                    }
-          </strong></td>
+         <td>change in the user JSON object  example:{
+          "Username": "Raju",
+          "Password": "123456",
+          "Email": "raju061@gmail.com",
+          "Birthday":"11/11/1995"
+      }</td>
          <td>A JSON object holding updated data about user like:
           <strong>
             {
-              "id": 1,
-              "Name": "Harry",
-              "favoriteMovies": []
-                     }
+              "Username": "Raju",
+              "Password": "123456",
+              "Email": "raju061@gmail.com",
+              "Birthday":"11/11/1995"
+          }
           </strong> </td>
         </tr>
         <tr>
-          <td>delete the favorite movies with movie title from user</td>
-          <td>users/:id/:newMovie</td>
+          <td>delete the favorite movies with movie title from user's favoriteMovies array</td>
+          <td>/users/:Username/movies/:MovieID</td>
           <td>Delete</td>
           <td>None</td>
-          <td>A text message indicating movieTitle has been removed from user id array</td>
+          <td>display the  new updated FavoriteMovies Array </td>
          </tr>
         <tr>
-          <td>delete the user with the given id</td>
-          <td>/users/:id/</td>
+          <td>delete the user with the given Username</td>
+          <td>/users/:Username</td>
           <td>Delete</td>
           <td>None</td>
-          <td>A text message indicating the user with given id has been removed</td>
+          <td>A text message indicating the user with given userName has been removed</td>
          </tr>
       </table>
     </p>
