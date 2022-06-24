@@ -22,7 +22,7 @@ mongoose.connect("mongodb://localhost:27017/test", {
   useUnifiedTopology: true,
 });
 
-const { CREATED, OK, BAD_REQUEST, NOT_FOUND } = {
+const { CREATED, OK, BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = {
   CREATED: 201,
   OK: 200,
   BAD_REQUEST: 400,
@@ -39,7 +39,11 @@ app.get("/", (req, res) => {
 app.get("/movies", (req, res) => {
   Movies.find()
     .then((movies) => {
-      res.status(CREATED).json(movies);
+      if (!movie) {
+        res.status(NOT_FOUND).send("No movies found");
+      } else {
+        res.status(CREATED).json(movies);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -51,7 +55,11 @@ app.get("/movies", (req, res) => {
 app.get("/users", function (req, res) {
   Users.find()
     .then(function (users) {
-      res.status(CREATED).json(users);
+      if (!users) {
+        res.status(NOT_FOUND).send("No users found");
+      } else {
+        res.status(OK).json(users);
+      }
     })
     .catch(function (err) {
       console.error(err);
@@ -63,11 +71,15 @@ app.get("/users", function (req, res) {
 app.get("/users/:Username", (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
-      res.json(user);
+      if (!user) {
+        res.status(NOT_FOUND).send(req.params.Username + "not found");
+      } else {
+        res.status(OK).json(user);
+      }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(SERVER_ERROR).send("Error: " + err);
     });
 });
 
@@ -75,7 +87,11 @@ app.get("/users/:Username", (req, res) => {
 app.get("/movies/:Title", (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
-      res.json(movie);
+      if (!movie) {
+        res.status(NOT_FOUND).send(req.params.Title + "not found");
+      } else {
+        res.status(OK).json(movie);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -86,11 +102,15 @@ app.get("/movies/:Title", (req, res) => {
 app.get("/movies/genre/:name", (req, res) => {
   Movies.find({ "Genre.Name": req.params.name })
     .then((genre) => {
-      res.status(201).json(genre);
+      if (!genre) {
+        res.status(NOT_FOUND).send("Genre not found");
+      } else {
+        res.status(OK).json(genre);
+      }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(SERVER_ERROR).send("Error: " + err);
     });
 });
 
@@ -98,7 +118,10 @@ app.get("/movies/genre/:name", (req, res) => {
 app.get("/movies/director/:Name", (req, res) => {
   Movies.find({ "Director.Name": req.params.Name })
     .then((director) => {
-      res.json(director);
+      if (!director) {
+        res.status(NOT_FOUND).send(" Director not found");
+      }
+      res.status(OK).json(director);
     })
     .catch((err) => {
       console.error(err);
@@ -111,7 +134,9 @@ app.post("/users", (req, res) => {
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
+        return res
+          .status(BAD_REQUEST)
+          .send(req.body.Username + "already exists");
       } else {
         Users.create({
           Username: req.body.Username,
@@ -124,13 +149,13 @@ app.post("/users", (req, res) => {
           })
           .catch((error) => {
             console.error(error);
-            res.status(500).send("Error: " + error);
+            res.status(SERVER_ERROR).send("Error: " + error);
           });
       }
     })
     .catch((error) => {
       console.error(error);
-      res.status(500).send("Error: " + error);
+      res.status(SERVER_ERROR).send("Error: " + error);
     });
 });
 // Update: User info
@@ -149,7 +174,7 @@ app.put("/users/:Username", (req, res) => {
     (err, updatedUser) => {
       if (err) {
         console.error(err);
-        res.status(500).send("Error: " + err);
+        res.status(SERVER_ERROR).send("Error: " + err);
       } else {
         res.json(updatedUser);
       }
@@ -167,7 +192,7 @@ app.post("/users/:Username/movies/:MovieID", (req, res) => {
     (err, updatedUser) => {
       if (err) {
         console.error(err);
-        res.status(500).send("Error: " + err);
+        res.status(SERVER_ERROR).send("Error: " + err);
       } else {
         res.json(updatedUser);
       }
@@ -180,14 +205,14 @@ app.delete("/users/:Username", (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Username + " was not found");
+        res.status(BAD_REQUEST).send(req.params.Username + " was not found");
       } else {
-        res.status(200).send(req.params.Username + " was deleted.");
+        res.status(OK).send(req.params.Username + " was deleted.");
       }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(SERVER_ERROR).send("Error: " + err);
     });
 });
 
@@ -202,7 +227,7 @@ app.delete("/users/:Username/movies/:MovieID", (req, res) => {
     (err, updatedUser) => {
       if (err) {
         console.error(err);
-        res.status(500).send("Error: " + err);
+        res.status(SERVER_ERROR).send("Error: " + err);
       } else {
         res.json(updatedUser);
       }
