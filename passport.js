@@ -28,6 +28,11 @@ passport.use(
           });
         }
 
+        if (!user.validatePassword(password)) {
+          console.log("incorrect password"); //hash any password entered by the user when logging in before comparing it to hte password stored in mongoDB
+          return callback(null, false, { message: "Incorrect Password." });
+        }
+
         console.log("finished");
         return callback(null, user);
       });
