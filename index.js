@@ -183,7 +183,6 @@ app.get(
 // allow user register
 app.post(
   "/users",
-  passport.authenticate("jwt", { session: false }),
   [
     check("Username", "Username is required").isLength({ min: 5 }),
     check(
