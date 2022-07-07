@@ -40,11 +40,14 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect("mongodb://localhost:27017/test", {
+/*mongoose.connect("mongodb://localhost:27017/test", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 const { CREATED, OK, BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = {
   CREATED: 201,
   OK: 200,
@@ -230,12 +233,13 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    let hashedPassword = Users.hashPassword(re.body.Password);
     Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
         $set: {
           Username: req.body.Username,
-          Password: req.body.Password,
+          Password: hashedPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday,
         },
