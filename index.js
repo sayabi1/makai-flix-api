@@ -68,7 +68,7 @@ const { CREATED, OK, BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = {
 
 // GET default text response when at /
 app.get("/", (req, res) => {
-  res.send("welcomeo to makaiflix");
+  res.send("welcome to makaiflix");
 });
 
 // GET  text response when at /movies
