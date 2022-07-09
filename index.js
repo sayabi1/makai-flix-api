@@ -5,10 +5,11 @@ const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
 const app = express();
+const passport = require("passport");
+require("./passport");
 
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-let auth = require("./auth")(app);
+
 const cors = require("cors");
 //app.use(cors()); // it will set the application to allow rquest from all origin
 let allowedOrigins = ["http://localhost:8080 ", "http://testsite.com"];
@@ -27,8 +28,10 @@ app.use(
     },
   })
 );
-const passport = require("passport");
-require("./passport");
+let auth = require("./auth")(app);
+app.use(bodyParser.json());
+app.use(morgan("common"));
+
 app.use(express.static("public"));
 const mongoose = require("mongoose");
 const Models = require("./models.js");
@@ -48,6 +51,13 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+/*mongoose.connect(
+  "mongodb+srv://myflixappadmin:AdminFlixpassword@my-flix-application.mcflq.mongodb.net/myFlixDB?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);*/
 const { CREATED, OK, BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = {
   CREATED: 201,
   OK: 200,
@@ -59,7 +69,6 @@ const { CREATED, OK, BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = {
 // GET default text response when at /
 app.get("/", (req, res) => {
   res.send("welcomeo to makaiflix");
-  rs;
 });
 
 // GET  text response when at /movies
@@ -190,7 +199,7 @@ app.post(
       "Username contains non alphanumberic charecter - not allowed"
     ).isAlphanumeric(),
     check("Password", "Password is required").not().isEmpty(),
-    check("Email", "Email does not appeared to be valid").isEmail,
+    check("Email", "Email does not appeared to be valid").isEmail(),
   ],
   (req, res) => {
     // check validation object for errors
@@ -198,7 +207,7 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: error.array() });
     }
-    let hashedPassword = Users.hashPassword(re.body.Password); // before storing the users password in DB this function modify the endpoint to hash the password before storing it
+    let hashedPassword = Users.hashPassword(req.body.Password); // before storing the users password in DB this function modify the endpoint to hash the password before storing it
     Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -232,7 +241,7 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let hashedPassword = Users.hashPassword(re.body.Password);
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
