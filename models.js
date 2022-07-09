@@ -20,7 +20,7 @@ let movieSchema = mongoose.Schema({
 let userSchema = mongoose.Schema({
   Username: { type: String, required: true },
   Email: { type: String, required: true },
-  Password: { type: String, required: true, select: false },
+  Password: { type: String, required: true },
   Birthday: Date,
   FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
 });
@@ -32,7 +32,7 @@ userSchema.statics.hashPassword = (password) => {
 
 userSchema.methods.validatePassword = function (password) {
   // is what compares the hashed password with the hashed password stored in your DB
-  return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.Password);
 };
 
 let Movie = mongoose.model("Movie", movieSchema);
