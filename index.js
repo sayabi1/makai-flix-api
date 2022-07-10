@@ -52,7 +52,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 /*mongoose.connect(
-  "mongodb+srv://makaiflixDB:shivbabaHG12@makaiflixdb.ulyscea.mongodb.net/makaiflixDB?retryWrites=true&w=majority",
+  "",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -72,24 +72,20 @@ app.get("/", (req, res) => {
 });
 
 // GET  text response when at /movies
-app.get(
-  "/movies",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Movies.find()
-      .then((movies) => {
-        if (!movies) {
-          res.status(NOT_FOUND).send("No movies found");
-        } else {
-          res.status(CREATED).json(movies);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(SERVER_ERROR).send("Error: " + err);
-      });
-  }
-);
+app.get("/movies", (req, res) => {
+  Movies.find()
+    .then((movies) => {
+      if (!movies) {
+        res.status(NOT_FOUND).send("No movies found");
+      } else {
+        res.status(CREATED).json(movies);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(SERVER_ERROR).send("Error: " + err);
+    });
+});
 
 //Get the users at /users
 app.get(
