@@ -47,12 +47,12 @@ const Directors = Models.Director;
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });*/
-mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 /*mongoose.connect(
-  "mongodb+srv://myflixappadmin:AdminFlixpassword@my-flix-application.mcflq.mongodb.net/myFlixDB?retryWrites=true&w=majority",
+  "mongodb+srv://makaiflixDB:shivbabaHG12@makaiflixdb.ulyscea.mongodb.net/makaiflixDB?retryWrites=true&w=majority",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
